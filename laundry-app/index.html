@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Сегодня постираем</title>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --bg: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text: #1F2937;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            padding-bottom: 80px; /* Место для нижней панели */
+        }
+
+        /* Шапка */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Контейнер */
+        .container {
+            padding: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Карточка вещи */
+        .item-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .item-category {
+            font-size: 0.8rem;
+            color: #6B7280;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-storage { background: #E5E7EB; color: #374151; }
+        .status-in_use { background: #DBEAFE; color: #1E40AF; }
+        .status-washing { background: #FEF3C7; color: #92400E; }
+        .status-drying { background: #D1FAE5; color: #065F46; }
+
+        .progress-bar {
+            height: 6px;
+            background: #E5E7EB;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill.warning { background: var(--warning); }
+        .progress-fill.danger { background: var(--danger); }
+
+        .item-info {
+            font-size: 0.9rem;
+            color: #4B5563;
+        }
+
+        /* Кнопки действий */
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        button {
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:active { opacity: 0.8; }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        .btn-danger { background: var(--danger); color: white; }
+        
+        /* Плавающая кнопка добавления */
+        .fab {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.4);
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Нижняя навигация */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .nav-item {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6B7280;
+            cursor: pointer;
+        }
+        .nav-item.active { color: var(--primary); font-weight: bold; }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 10px; border: 1px solid #D1D5DB; border-radius: 6px; box-sizing: border-box;
+        }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<header>🧺 Сегодня постираем</header>
+
+<div class="container" id="app">
+    <!-- Сюда будут рендериться карточки -->
+</div>
+
+<button class="fab" onclick="openModal()">+</button>
+
+<div class="bottom-nav">
+    <div class="nav-item active" onclick="filterItems('all')">Все</div>
+    <div class="nav-item" onclick="filterItems('in_use')">В использовании</div>
+    <div class="nav-item" onclick="filterItems('washing')">В стирке</div>
+    <div class="nav-item" onclick="filterItems('storage')">Шкаф</div>
+</div>
+
+<!-- Модальное окно добавления/редактирования -->
+<div class="modal" id="itemModal">
+    <div class="modal-content">
+        <h3 id="modalTitle">Новая вещь</h3>
+        <div class="form-group">
+            <label>Название</label>
+            <input type="text" id="itemName" placeholder="Например: Белая наволочка">
+        </div>
+        <div class="form-group">
+            <label>Категория</label>
+            <select id="itemCategory">
+                <option value="Постельное">Постельное</option>
+                <option value="Одежда">Одежда</option>
+                <option value="Полотенца">Полотенца</option>
+                <option value="Другое">Другое</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Срок носки (дней)</label>
+            <input type="number" id="itemLimit" value="7">
+        </div>
+        <div class="modal-actions">
+            <button class="btn-outline" onclick="closeModal()">Отмена</button>
+            <button class="btn-primary" onclick="saveItem()">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно откладывания -->
+<div class="modal" id="postponeModal">
+    <div class="modal-content">
+        <h3>Отложить стирку?</h3>
+        <p>Почему вы не стираете вещь сейчас?</p>
+        <div class="form-group">
+            <label>Добавить дней к сроку:</label>
+            <input type="number" id="postponeDays" value="3">
+        </div>
+        <div class="modal-actions">
+            <button class="btn-outline" onclick="closePostponeModal()">Отмена</button>
+            <button class="btn-primary" onclick="confirmPostpone()">ОК</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- СОСТОЯНИЕ ПРИЛОЖЕНИЯ ---
+    let items = [];
+    let currentFilter = 'all';
+    let editingItemId = null;
+    let postponingItemId = null;
+
+    // --- ИНИЦИАЛИЗАЦИЯ ---
+    window.onload = () => {
+        loadItems();
+        renderItems();
+        checkReminders();
+    };
+
+    // --- ЛОГИКА ДАННЫХ ---
+    function loadItems() {
+        const stored = localStorage.getItem('laundryItems');
+        if (stored) {
+            items = JSON.parse(stored);
+        } else {
+            // Демо данные для первого запуска
+            items = [
+                { id: 1, name: 'Наволочка белая', category: 'Постельное', status: 'in_use', limit: 7, startDate: Date.now() - 5 * 24 * 60 * 60 * 1000, totalWashes: 5, postponeUntil: null },
+                { id: 2, name: 'Джинсы', category: 'Одежда', status: 'storage', limit: 10, startDate: null, totalWashes: 12, postponeUntil: null },
+                { id: 3, name: 'Полотенце банное', category: 'Полотенца', status: 'drying', limit: 5, startDate: null, totalWashes: 20, postponeUntil: null }
+            ];
+            saveItems();
+        }
+    }
+
+    function saveItems() {
+        localStorage.setItem('laundryItems', JSON.stringify(items));
+        renderItems();
+    }
+
+    function createItem(name, category, limit) {
+        const newItem = {
+            id: Date.now(),
+            name,
+            category,
+            status: 'storage', // По умолчанию в шкафу
+            limit: parseInt(limit),
+            startDate: null,
+            totalWashes: 0,
+            postponeUntil: null
+        };
+        items.push(newItem);
+        saveItems();
+    }
+
+    function updateStatus(id, newStatus) {
+        const item = items.find(i => i.id === id);
+        if (!item) return;
+
+        if (newStatus === 'in_use') {
+            item.startDate = Date.now();
+            item.postponeUntil = null; // Сброс откладывания при новом использовании
+        } else if (newStatus === 'storage') {
+            // Если убрали в шкаф после сушки
+            item.totalWashes += 1;
+            item.startDate = null;
+            item.postponeUntil = null;
+        } else if (newStatus === 'washing' || newStatus === 'drying') {
+            // Если отправили в стирку, останавливаем счетчик износа
+            // (логически startDate остается, но мы перестаем считать дни для напоминания)
+        }
+
+        item.status = newStatus;
+        saveItems();
+    }
+
+    // --- ОТЛОЖЕНИЕ СТИРКИ ---
+    function postponeWash(id) {
+        postponingItemId = id;
+        document.getElementById('postponeModal').style.display = 'flex';
+    }
+
+    function confirmPostpone() {
+        const days = parseInt(document.getElementById('postponeDays').value);
+        const item = items.find(i => i.id === postponingItemId);
+        if (item) {
+            // Увеличиваем лимит или ставим дату следующего напоминания
+            // В данной реализации просто сдвигаем "виртуальную" дату начала
+            // Чтобы упростить: добавляем дни к лимиту временно
+            item.limit += days; 
+            // Или лучше: запоминаем дату, до которой не тревожить
+            // Для простоты демо: просто меняем статус на in_use (он и так там), 
+            // но в рендере учтем, что напоминание сдвинулось.
+            // В реальном приложении лучше поле nextReminderDate.
+            alert(`Напоминание отложено на ${days} дн.`);
+        }
+        closePostponeModal();
+        saveItems();
+    }
+
+    // --- РЕНДЕРИНГ ---
+    function renderItems() {
+        const container = document.getElementById('app');
+        container.innerHTML = '';
+
+        const filtered = currentFilter === 'all' 
+            ? items 
+            : items.filter(i => i.status === currentFilter);
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div style="text-align:center; color:#9CA3AF; margin-top:50px;">Здесь пока пусто</div>';
+            return;
+        }
+
+        filtered.forEach(item => {
+            const daysUsed = item.startDate ? getDaysDiff(item.startDate) : 0;
+            const isOverdue = item.status === 'in_use' && daysUsed >= item.limit;
+            const progress = Math.min((daysUsed / item.limit) * 100, 100);
+            
+            let progressClass = '';
+            if (progress > 50) progressClass = 'warning';
+            if (progress >= 100) progressClass = 'danger';
+
+            let actionsHtml = '';
+            
+            // Логика кнопок в зависимости от статуса
+            if (item.status === 'storage') {
+                actionsHtml = `<button class="btn-primary" onclick="updateStatus(${item.id}, 'in_use')">Начать использовать</button>`;
+            } else if (item.status === 'in_use') {
+                if (isOverdue) {
+                    actionsHtml = `
+                        <button class="btn-danger" onclick="updateStatus(${item.id}, 'washing')">Постирать</button>
+                        <button class="btn-outline" onclick="postponeWash(${item.id})">Отложить</button>
+                    `;
+                } else {
+                    actionsHtml = `<button class="btn-outline" onclick="updateStatus(${item.id}, 'washing')">В стирку</button>`;
+                }
+            } else if (item.status === 'washing') {
+                actionsHtml = `<button class="btn-primary" onclick="updateStatus(${item.id}, 'drying')">Постирано (Сушится)</button>`;
+            } else if (item.status === 'drying') {
+                actionsHtml = `<button class="btn-primary" onclick="updateStatus(${item.id}, 'storage')">Убрать в шкаф</button>`;
+            }
+
+            const statusLabels = {
+                'storage': 'В шкафу',
+                'in_use': 'В использовании',
+                'washing': 'В стирке',
+                'drying': 'Сушится'
+            };
+
+            const html = `
+                <div class="item-card">
+                    <div class="item-header">
+                        <div>
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-category">${item.category}</div>
+                        </div>
+                        <div class="status-badge status-${item.status}">${statusLabels[item.status]}</div>
+                    </div>
+                    
+                    ${item.status === 'in_use' ? `
+                        <div class="item-info">
+                            Используется: ${daysUsed} дн. из ${item.limit}
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill ${progressClass}" style="width: ${progress}%"></div>
+                        </div>
+                    ` : ''}
+
+                    ${item.status === 'storage' ? `<div class="item-info">Стирок всего: ${item.totalWashes}</div>` : ''}
+
+                    <div class="actions">
+                        ${actionsHtml}
+                    </div>
+                </div>
+            `;
+            container.innerHTML += html;
+        });
+    }
+
+    // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
+    function getDaysDiff(startDate) {
+        const diff = Date.now() - startDate;
+        return Math.floor(diff / (1000 * 60 * 60 * 24));
+    }
+
+    function checkReminders() {
+        // Проверка при загрузке: если есть просроченные, можно показать браузерное уведомление
+        const overdue = items.filter(i => i.status === 'in_use' && getDaysDiff(i.startDate) >= i.limit);
+        if (overdue.length > 0 && "Notification" in window && Notification.permission === "granted") {
+            new Notification("Сегодня постираем", {
+                body: `${overdue.length} вещей(и) требуют стирки!`,
+                icon: "https://cdn-icons-png.flaticon.com/512/2663/2663503.png"
+            });
+        } else if ("Notification" in window && Notification.permission !== "denied") {
+            Notification.requestPermission();
+        }
+    }
+
+    function filterItems(filter) {
+        currentFilter = filter;
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        event.target.classList.add('active');
+        renderItems();
+    }
+
+    // --- МОДАЛЬНЫЕ ОКНА ---
+    function openModal() {
+        editingItemId = null;
+        document.getElementById('modalTitle').innerText = 'Новая вещь';
+        document.getElementById('itemName').value = '';
+        document.getElementById('itemLimit').value = '7';
+        document.getElementById('itemModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('itemModal').style.display = 'none';
+    }
+    
+    function closePostponeModal() {
+        document.getElementById('postponeModal').style.display = 'none';
+    }
+
+    function saveItem() {
+        const name = document.getElementById('itemName').value;
+        const category = document.getElementById('itemCategory').value;
+        const limit = document.getElementById('itemLimit').value;
+
+        if (!name) return alert('Введите название');
+
+        if (editingItemId) {
+            // Редактирование (пока не реализовано детально, просто создание для демо)
+        } else {
+            createItem(name, category, limit);
+        }
+        closeModal();
+    }
+
+    // Закрытие модального окна по клику вне
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>
