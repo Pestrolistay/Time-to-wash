@@ -21,10 +21,9 @@
             color: var(--text);
             margin: 0;
             padding: 0;
-            padding-bottom: 80px; /* Место для нижней панели */
+            padding-bottom: 80px;
         }
 
-        /* Шапка */
         header {
             background: var(--primary);
             color: white;
@@ -38,14 +37,12 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* Контейнер */
         .container {
             padding: 15px;
             max-width: 600px;
             margin: 0 auto;
         }
 
-        /* Карточка вещи */
         .item-card {
             background: var(--card-bg);
             border-radius: 12px;
@@ -60,17 +57,37 @@
         .item-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .item-name {
             font-weight: bold;
             font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .item-category {
             font-size: 0.8rem;
             color: #6B7280;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .category-icon {
+            font-size: 1.5rem;
+        }
+
+        .storage-location {
+            font-size: 0.75rem;
+            color: #6B7280;
+            background: #F3F4F6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+            display: inline-block;
         }
 
         .status-badge {
@@ -107,15 +124,49 @@
         .item-info {
             font-size: 0.9rem;
             color: #4B5563;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 5px;
         }
 
-        /* Кнопки действий */
+        .postpone-counter {
+            background: #FEF3C7;
+            color: #92400E;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
         .actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-top: 5px;
         }
+
+        .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 5px;
+            padding-top: 10px;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            padding: 5px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .btn-icon:hover { opacity: 1; }
+        .btn-icon.edit { color: var(--primary); }
+        .btn-icon.delete { color: var(--danger); }
 
         button {
             border: none;
@@ -131,8 +182,9 @@
         .btn-primary { background: var(--primary); color: white; }
         .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
         .btn-danger { background: var(--danger); color: white; }
+        .btn-settings { background: #6B7280; color: white; }
+        .btn-warning { background: var(--warning); color: white; }
         
-        /* Плавающая кнопка добавления */
         .fab {
             position: fixed;
             bottom: 90px;
@@ -151,7 +203,11 @@
             border: none;
         }
 
-        /* Нижняя навигация */
+        .fab-settings {
+            bottom: 160px;
+            background: #6B7280;
+        }
+
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -166,13 +222,13 @@
 
         .nav-item {
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #6B7280;
             cursor: pointer;
+            padding: 5px;
         }
         .nav-item.active { color: var(--primary); font-weight: bold; }
 
-        /* Модальное окно */
         .modal {
             display: none;
             position: fixed;
@@ -188,6 +244,8 @@
             border-radius: 12px;
             width: 90%;
             max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
@@ -197,6 +255,74 @@
         .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
 
         .hidden { display: none; }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .icon-option {
+            font-size: 1.5rem;
+            padding: 10px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .icon-option.selected {
+            border-color: var(--primary);
+            background: #EEF2FF;
+        }
+
+        .settings-section {
+            background: #F9FAFB;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .settings-section h4 {
+            margin: 0 0 10px 0;
+            color: var(--primary);
+        }
+
+        .notification-preview {
+            background: #EEF2FF;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+
+        .storage-zone-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .storage-zone-item.default {
+            background: #EEF2FF;
+            border-color: var(--primary);
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #E5E7EB;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin: 2px;
+        }
     </style>
 </head>
 <body>
@@ -208,12 +334,14 @@
 </div>
 
 <button class="fab" onclick="openModal()">+</button>
+<button class="fab fab-settings" onclick="openSettingsModal()">⚙️</button>
 
 <div class="bottom-nav">
     <div class="nav-item active" onclick="filterItems('all')">Все</div>
     <div class="nav-item" onclick="filterItems('in_use')">В использовании</div>
     <div class="nav-item" onclick="filterItems('washing')">В стирке</div>
-    <div class="nav-item" onclick="filterItems('storage')">Шкаф</div>
+    <div class="nav-item" onclick="filterItems('drying')">Сушилка</div>
+    <div class="nav-item" onclick="filterItems('storage')">Хранение</div>
 </div>
 
 <!-- Модальное окно добавления/редактирования -->
@@ -230,8 +358,28 @@
                 <option value="Постельное">Постельное</option>
                 <option value="Одежда">Одежда</option>
                 <option value="Полотенца">Полотенца</option>
+                <option value="Нижнее бельё">Нижнее бельё</option>
+                <option value="Верхняя одежда">Верхняя одежда</option>
+                <option value="Обувь">Обувь</option>
+                <option value="Кухня">Кухня</option>
+                <option value="Ванная">Ванная</option>
+                <option value="Спальня">Спальня</option>
+                <option value="Офис">Офис</option>
                 <option value="Другое">Другое</option>
             </select>
+        </div>
+        <div class="form-group">
+            <label>Зона хранения</label>
+            <select id="itemStorage">
+                <!-- Заполняется динамически -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Иконка</label>
+            <div class="icon-grid" id="iconGrid">
+                <!-- Иконки генерируются JS -->
+            </div>
+            <input type="hidden" id="itemIcon" value="👕">
         </div>
         <div class="form-group">
             <label>Срок носки (дней)</label>
@@ -248,10 +396,20 @@
 <div class="modal" id="postponeModal">
     <div class="modal-content">
         <h3>Отложить стирку?</h3>
-        <p>Почему вы не стираете вещь сейчас?</p>
+        <p>Вещь будет напоминать позже</p>
         <div class="form-group">
             <label>Добавить дней к сроку:</label>
             <input type="number" id="postponeDays" value="3">
+        </div>
+        <div class="form-group">
+            <label>Причина (опционально):</label>
+            <select id="postponeReason">
+                <option value="">Не указано</option>
+                <option value="Мало носили">Мало носили</option>
+                <option value="Особая ткань">Особая ткань</option>
+                <option value="Нет времени">Нет времени</option>
+                <option value="Другое">Другое</option>
+            </select>
         </div>
         <div class="modal-actions">
             <button class="btn-outline" onclick="closePostponeModal()">Отмена</button>
@@ -260,19 +418,229 @@
     </div>
 </div>
 
+<!-- Модальное окно настроек -->
+<div class="modal" id="settingsModal">
+    <div class="modal-content">
+        <h3>⚙️ Настройки</h3>
+        
+        <div class="settings-section">
+            <h4>🔔 Уведомления</h4>
+            <div class="form-group">
+                <label>Предупреждать за (дней до конца срока):</label>
+                <input type="number" id="notifyBeforeDays" value="1" min="0" max="5">
+            </div>
+            <div class="notification-preview">
+                Пример: При сроке 7 дней и настройке "1 день" уведомление придёт на 6-й день использования
+            </div>
+            <div class="form-group" style="margin-top: 10px;">
+                <label>
+                    <input type="checkbox" id="enableNotifications" checked> Включить уведомления
+                </label>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h4>🏠 Зоны хранения</h4>
+            <div id="storageZonesList">
+                <!-- Список зон -->
+            </div>
+            <div class="form-group" style="margin-top: 10px; display: flex; gap: 10px;">
+                <input type="text" id="newStorageZone" placeholder="Новая зона">
+                <button class="btn-primary btn-small" onclick="addStorageZone()">+</button>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h4>📊 Статистика</h4>
+            <div class="item-info">
+                <span>Всего вещей:</span>
+                <span id="totalItems">0</span>
+            </div>
+            <div class="item-info">
+                <span>В использовании:</span>
+                <span id="inUseItems">0</span>
+            </div>
+            <div class="item-info">
+                <span>Требуют стирки:</span>
+                <span id="overdueItems">0</span>
+            </div>
+            <div class="item-info">
+                <span>На сушилке:</span>
+                <span id="dryingItems">0</span>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h4>💾 Данные</h4>
+            <button class="btn-outline" onclick="exportData()" style="width: 100%; margin-bottom: 10px;">📥 Экспорт данных</button>
+            <button class="btn-danger" onclick="clearAllData()" style="width: 100%;">🗑️ Очистить все данные</button>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-primary" onclick="saveSettings()">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно подтверждения удаления -->
+<div class="modal" id="deleteModal">
+    <div class="modal-content">
+        <h3>🗑️ Удалить вещь?</h3>
+        <p id="deleteConfirmText">Вы уверены, что хотите удалить эту вещь? Это действие нельзя отменить.</p>
+        <div class="modal-actions">
+            <button class="btn-outline" onclick="closeDeleteModal()">Отмена</button>
+            <button class="btn-danger" onclick="confirmDelete()">Удалить</button>
+        </div>
+    </div>
+</div>
+
 <script>
     // --- СОСТОЯНИЕ ПРИЛОЖЕНИЯ ---
     let items = [];
+    let settings = {
+        notifyBeforeDays: 1,
+        enableNotifications: true,
+        storageZones: ['Шкаф']
+    };
     let currentFilter = 'all';
     let editingItemId = null;
     let postponingItemId = null;
+    let deletingItemId = null;
+    let selectedIcon = '👕';
+
+    // Иконки для категорий
+    const categoryIcons = {
+        'Постельное': ['🛏️', '🛌', '🧵', '📦', '🏠'],
+        'Одежда': ['👕', '👖', '👗', '👚', '👔'],
+        'Полотенца': ['🧖', '🚿', '🧽', '🌊', '💧'],
+        'Нижнее бельё': ['🩲', '👙', '🧦', '🩳', '🎽'],
+        'Верхняя одежда': ['🧥', '🧣', '🧤', '🧢', '🎒'],
+        'Обувь': ['👟', '👞', '👠', '🥾', '🩴'],
+        'Кухня': ['🍽️', '🥄', '🧺', '🧼', '🏠'],
+        'Ванная': ['🛁', '🚽', '🧴', '🪥', '🚿'],
+        'Спальня': ['🛏️', '💤', '🌙', '🛋️', '🏠'],
+        'Офис': ['💼', '📁', '🖊️', '💻', '📎'],
+        'Другое': ['📦', '🏷️', '🔖', '📌', '⭐']
+    };
+
+    const allIcons = ['👕', '👖', '👗', '👚', '👔', '🧥', '🧦', '🩲', '👟', '👞', '🛏️', '🛌', '🧖', '🚿', '🧽', '🍽️', '🥄', '🛁', '🚽', '💼', '📁', '🖊️', '📦', '🏷️', '🏠', '💤', '🌙', '🧣', '🧤', '🎒'];
 
     // --- ИНИЦИАЛИЗАЦИЯ ---
     window.onload = () => {
+        loadSettings();
         loadItems();
+        renderIconGrid();
         renderItems();
         checkReminders();
     };
+
+    // --- НАСТРОЙКИ ---
+    function loadSettings() {
+        const stored = localStorage.getItem('laundrySettings');
+        if (stored) {
+            settings = JSON.parse(stored);
+        }
+        if (!settings.storageZones || settings.storageZones.length === 0) {
+            settings.storageZones = ['Шкаф'];
+        }
+    }
+
+    function saveSettings() {
+        settings.notifyBeforeDays = parseInt(document.getElementById('notifyBeforeDays').value);
+        settings.enableNotifications = document.getElementById('enableNotifications').checked;
+        localStorage.setItem('laundrySettings', JSON.stringify(settings));
+        document.getElementById('settingsModal').style.display = 'none';
+        renderStorageZonesSelect();
+        alert('Настройки сохранены!');
+    }
+
+    function openSettingsModal() {
+        document.getElementById('notifyBeforeDays').value = settings.notifyBeforeDays;
+        document.getElementById('enableNotifications').checked = settings.enableNotifications;
+        document.getElementById('totalItems').innerText = items.length;
+        document.getElementById('inUseItems').innerText = items.filter(i => i.status === 'in_use').length;
+        document.getElementById('overdueItems').innerText = items.filter(i => i.status === 'in_use' && getDaysDiff(i.startDate) >= i.limit).length;
+        document.getElementById('dryingItems').innerText = items.filter(i => i.status === 'drying').length;
+        renderStorageZonesList();
+        document.getElementById('settingsModal').style.display = 'flex';
+    }
+
+    // --- ЗОНЫ ХРАНЕНИЯ ---
+    function renderStorageZonesList() {
+        const list = document.getElementById('storageZonesList');
+        list.innerHTML = '';
+        
+        settings.storageZones.forEach((zone, index) => {
+            const isDefault = index === 0;
+            const div = document.createElement('div');
+            div.className = `storage-zone-item ${isDefault ? 'default' : ''}`;
+            div.innerHTML = `
+                <span>${zone} ${isDefault ? '(По умолчанию)' : ''}</span>
+                ${!isDefault ? `<button class="btn-danger btn-small" onclick="removeStorageZone(${index})">✕</button>` : ''}
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    function addStorageZone() {
+        const input = document.getElementById('newStorageZone');
+        const zoneName = input.value.trim();
+        
+        if (!zoneName) {
+            alert('Введите название зоны');
+            return;
+        }
+        
+        if (settings.storageZones.includes(zoneName)) {
+            alert('Такая зона уже существует');
+            return;
+        }
+        
+        settings.storageZones.push(zoneName);
+        input.value = '';
+        renderStorageZonesList();
+        saveSettingsToStorage();
+    }
+
+    function removeStorageZone(index) {
+        if (index === 0) {
+            alert('Нельзя удалить зону по умолчанию');
+            return;
+        }
+        
+        const zoneName = settings.storageZones[index];
+        const itemsInZone = items.filter(i => i.storageZone === zoneName);
+        
+        if (itemsInZone.length > 0) {
+            if (!confirm(`В зоне "${zoneName}" находится ${itemsInZone.length} вещей(и). Они будут перемещены в "Шкаф". Продолжить?`)) {
+                return;
+            }
+            itemsInZone.forEach(item => {
+                item.storageZone = settings.storageZones[0];
+            });
+            saveItems();
+        }
+        
+        settings.storageZones.splice(index, 1);
+        renderStorageZonesList();
+        saveSettingsToStorage();
+    }
+
+    function saveSettingsToStorage() {
+        localStorage.setItem('laundrySettings', JSON.stringify(settings));
+    }
+
+    function renderStorageZonesSelect() {
+        const select = document.getElementById('itemStorage');
+        select.innerHTML = '';
+        
+        settings.storageZones.forEach(zone => {
+            const option = document.createElement('option');
+            option.value = zone;
+            option.innerText = zone;
+            select.appendChild(option);
+        });
+    }
 
     // --- ЛОГИКА ДАННЫХ ---
     function loadItems() {
@@ -280,11 +648,11 @@
         if (stored) {
             items = JSON.parse(stored);
         } else {
-            // Демо данные для первого запуска
             items = [
-                { id: 1, name: 'Наволочка белая', category: 'Постельное', status: 'in_use', limit: 7, startDate: Date.now() - 5 * 24 * 60 * 60 * 1000, totalWashes: 5, postponeUntil: null },
-                { id: 2, name: 'Джинсы', category: 'Одежда', status: 'storage', limit: 10, startDate: null, totalWashes: 12, postponeUntil: null },
-                { id: 3, name: 'Полотенце банное', category: 'Полотенца', status: 'drying', limit: 5, startDate: null, totalWashes: 20, postponeUntil: null }
+                { id: 1, name: 'Наволочка белая', category: 'Постельное', icon: '🛏️', status: 'in_use', limit: 7, startDate: Date.now() - 5 * 24 * 60 * 60 * 1000, totalWashes: 5, postponeUntil: null, postponeCount: 0, storageZone: 'Шкаф' },
+                { id: 2, name: 'Джинсы', category: 'Одежда', icon: '👖', status: 'storage', limit: 10, startDate: null, totalWashes: 12, postponeUntil: null, postponeCount: 0, storageZone: 'Шкаф' },
+                { id: 3, name: 'Полотенце банное', category: 'Полотенца', icon: '🧖', status: 'drying', limit: 5, startDate: null, totalWashes: 20, postponeUntil: null, postponeCount: 0, storageZone: 'Ванная' },
+                { id: 4, name: 'Футболка белая', category: 'Одежда', icon: '👕', status: 'washing', limit: 3, startDate: null, totalWashes: 8, postponeUntil: null, postponeCount: 0, storageZone: 'Шкаф' }
             ];
             saveItems();
         }
@@ -295,18 +663,34 @@
         renderItems();
     }
 
-    function createItem(name, category, limit) {
+    function createItem(name, category, icon, limit, storageZone) {
         const newItem = {
             id: Date.now(),
             name,
             category,
-            status: 'storage', // По умолчанию в шкафу
+            icon,
+            status: 'storage',
             limit: parseInt(limit),
             startDate: null,
             totalWashes: 0,
-            postponeUntil: null
+            postponeUntil: null,
+            postponeCount: 0,
+            storageZone: storageZone || settings.storageZones[0]
         };
         items.push(newItem);
+        saveItems();
+    }
+
+    function updateItem(id, data) {
+        const item = items.find(i => i.id === id);
+        if (!item) return;
+        
+        Object.assign(item, data);
+        saveItems();
+    }
+
+    function deleteItem(id) {
+        items = items.filter(i => i.id !== id);
         saveItems();
     }
 
@@ -316,15 +700,11 @@
 
         if (newStatus === 'in_use') {
             item.startDate = Date.now();
-            item.postponeUntil = null; // Сброс откладывания при новом использовании
+            item.postponeUntil = null;
         } else if (newStatus === 'storage') {
-            // Если убрали в шкаф после сушки
             item.totalWashes += 1;
             item.startDate = null;
             item.postponeUntil = null;
-        } else if (newStatus === 'washing' || newStatus === 'drying') {
-            // Если отправили в стирку, останавливаем счетчик износа
-            // (логически startDate остается, но мы перестаем считать дни для напоминания)
         }
 
         item.status = newStatus;
@@ -339,23 +719,70 @@
 
     function confirmPostpone() {
         const days = parseInt(document.getElementById('postponeDays').value);
+        const reason = document.getElementById('postponeReason').value;
         const item = items.find(i => i.id === postponingItemId);
+        
         if (item) {
-            // Увеличиваем лимит или ставим дату следующего напоминания
-            // В данной реализации просто сдвигаем "виртуальную" дату начала
-            // Чтобы упростить: добавляем дни к лимиту временно
-            item.limit += days; 
-            // Или лучше: запоминаем дату, до которой не тревожить
-            // Для простоты демо: просто меняем статус на in_use (он и так там), 
-            // но в рендере учтем, что напоминание сдвинулось.
-            // В реальном приложении лучше поле nextReminderDate.
-            alert(`Напоминание отложено на ${days} дн.`);
+            item.limit += days;
+            item.postponeCount = (item.postponeCount || 0) + 1;
+            item.postponeUntil = Date.now() + (days * 24 * 60 * 60 * 1000);
+            
+            if (reason) {
+                console.log(`Отложено: ${item.name}, причина: ${reason}`);
+            }
+            
+            alert(`Напоминание отложено на ${days} дн. (Всего откладываний: ${item.postponeCount})`);
         }
         closePostponeModal();
         saveItems();
     }
 
+    function closePostponeModal() {
+        document.getElementById('postponeModal').style.display = 'none';
+        document.getElementById('postponeDays').value = '3';
+        document.getElementById('postponeReason').value = '';
+    }
+
+    // --- УДАЛЕНИЕ ---
+    function openDeleteModal(id) {
+        deletingItemId = id;
+        const item = items.find(i => i.id === id);
+        document.getElementById('deleteConfirmText').innerText = `Вы уверены, что хотите удалить "${item.name}"? Это действие нельзя отменить.`;
+        document.getElementById('deleteModal').style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+        deletingItemId = null;
+    }
+
+    function confirmDelete() {
+        if (deletingItemId) {
+            deleteItem(deletingItemId);
+            closeDeleteModal();
+        }
+    }
+
     // --- РЕНДЕРИНГ ---
+    function renderIconGrid() {
+        const grid = document.getElementById('iconGrid');
+        grid.innerHTML = '';
+        allIcons.forEach(icon => {
+            const div = document.createElement('div');
+            div.className = 'icon-option' + (icon === selectedIcon ? ' selected' : '');
+            div.innerText = icon;
+            div.onclick = () => selectIcon(icon, div);
+            grid.appendChild(div);
+        });
+    }
+
+    function selectIcon(icon, element) {
+        selectedIcon = icon;
+        document.getElementById('itemIcon').value = icon;
+        document.querySelectorAll('.icon-option').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+    }
+
     function renderItems() {
         const container = document.getElementById('app');
         container.innerHTML = '';
@@ -371,7 +798,10 @@
 
         filtered.forEach(item => {
             const daysUsed = item.startDate ? getDaysDiff(item.startDate) : 0;
+            const daysUntilLimit = item.limit - daysUsed;
             const isOverdue = item.status === 'in_use' && daysUsed >= item.limit;
+            const isApproachingEnd = item.status === 'in_use' && daysUntilLimit <= settings.notifyBeforeDays && daysUntilLimit > 0;
+            
             const progress = Math.min((daysUsed / item.limit) * 100, 100);
             
             let progressClass = '';
@@ -380,7 +810,6 @@
 
             let actionsHtml = '';
             
-            // Логика кнопок в зависимости от статуса
             if (item.status === 'storage') {
                 actionsHtml = `<button class="btn-primary" onclick="updateStatus(${item.id}, 'in_use')">Начать использовать</button>`;
             } else if (item.status === 'in_use') {
@@ -389,50 +818,95 @@
                         <button class="btn-danger" onclick="updateStatus(${item.id}, 'washing')">Постирать</button>
                         <button class="btn-outline" onclick="postponeWash(${item.id})">Отложить</button>
                     `;
+                } else if (isApproachingEnd) {
+                    actionsHtml = `
+                        <button class="btn-warning" onclick="updateStatus(${item.id}, 'washing')">Постирать</button>
+                        <button class="btn-outline" onclick="postponeWash(${item.id})">Отложить</button>
+                    `;
                 } else {
                     actionsHtml = `<button class="btn-outline" onclick="updateStatus(${item.id}, 'washing')">В стирку</button>`;
                 }
             } else if (item.status === 'washing') {
-                actionsHtml = `<button class="btn-primary" onclick="updateStatus(${item.id}, 'drying')">Постирано (Сушится)</button>`;
+                actionsHtml = `<button class="btn-primary" onclick="updateStatus(${item.id}, 'drying')">На сушилку</button>`;
             } else if (item.status === 'drying') {
                 actionsHtml = `<button class="btn-primary" onclick="updateStatus(${item.id}, 'storage')">Убрать в шкаф</button>`;
             }
 
             const statusLabels = {
-                'storage': 'В шкафу',
+                'storage': 'В хранении',
                 'in_use': 'В использовании',
                 'washing': 'В стирке',
-                'drying': 'Сушится'
+                'drying': 'На сушилке'
             };
+
+            const postponeBadge = item.postponeCount > 0 
+                ? `<span class="postpone-counter">↩️ ${item.postponeCount} раз</span>` 
+                : '';
+
+            const approachingBadge = isApproachingEnd && !isOverdue
+                ? `<span class="postpone-counter" style="background:#FEF3C7;">⚠️ Скоро!</span>`
+                : '';
 
             const html = `
                 <div class="item-card">
                     <div class="item-header">
                         <div>
-                            <div class="item-name">${item.name}</div>
-                            <div class="item-category">${item.category}</div>
+                            <div class="item-name"><span class="category-icon">${item.icon}</span> ${item.name}</div>
+                            <div class="item-category">${item.icon} ${item.category}</div>
+                            ${item.status === 'storage' ? `<div class="storage-location">📍 ${item.storageZone || 'Шкаф'}</div>` : ''}
+                            ${item.status === 'drying' ? `<div class="storage-location">📍 Сушилка</div>` : ''}
                         </div>
                         <div class="status-badge status-${item.status}">${statusLabels[item.status]}</div>
                     </div>
                     
                     ${item.status === 'in_use' ? `
                         <div class="item-info">
-                            Используется: ${daysUsed} дн. из ${item.limit}
+                            <span>Используется: ${daysUsed} дн. из ${item.limit}</span>
+                            ${postponeBadge}
+                            ${approachingBadge}
                         </div>
                         <div class="progress-bar">
                             <div class="progress-fill ${progressClass}" style="width: ${progress}%"></div>
                         </div>
                     ` : ''}
 
-                    ${item.status === 'storage' ? `<div class="item-info">Стирок всего: ${item.totalWashes}</div>` : ''}
+                    ${item.status === 'storage' ? `<div class="item-info"><span>Стирок всего: ${item.totalWashes}</span> ${postponeBadge}</div>` : ''}
+                    ${item.status === 'washing' ? `<div class="item-info"><span>В процессе стирки</span> ${postponeBadge}</div>` : ''}
+                    ${item.status === 'drying' ? `<div class="item-info"><span>Сушится...</span> ${postponeBadge}</div>` : ''}
 
                     <div class="actions">
                         ${actionsHtml}
+                    </div>
+                    
+                    <div class="card-actions">
+                        <button class="btn-icon edit" onclick="openEditModal(${item.id})" title="Редактировать">✏️</button>
+                        <button class="btn-icon delete" onclick="openDeleteModal(${item.id})" title="Удалить">🗑️</button>
                     </div>
                 </div>
             `;
             container.innerHTML += html;
         });
+    }
+
+    // --- РЕДАКТИРОВАНИЕ ---
+    function openEditModal(id) {
+        const item = items.find(i => i.id === id);
+        if (!item) return;
+        
+        editingItemId = id;
+        selectedIcon = item.icon;
+        
+        document.getElementById('modalTitle').innerText = 'Редактировать вещь';
+        document.getElementById('itemName').value = item.name;
+        document.getElementById('itemCategory').value = item.category;
+        document.getElementById('itemLimit').value = item.limit;
+        document.getElementById('itemIcon').value = item.icon;
+        
+        renderStorageZonesSelect();
+        document.getElementById('itemStorage').value = item.storageZone || settings.storageZones[0];
+        
+        renderIconGrid();
+        document.getElementById('itemModal').style.display = 'flex';
     }
 
     // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
@@ -442,15 +916,26 @@
     }
 
     function checkReminders() {
-        // Проверка при загрузке: если есть просроченные, можно показать браузерное уведомление
+        if (!settings.enableNotifications) return;
+        
         const overdue = items.filter(i => i.status === 'in_use' && getDaysDiff(i.startDate) >= i.limit);
-        if (overdue.length > 0 && "Notification" in window && Notification.permission === "granted") {
-            new Notification("Сегодня постираем", {
-                body: `${overdue.length} вещей(и) требуют стирки!`,
-                icon: "https://cdn-icons-png.flaticon.com/512/2663/2663503.png"
-            });
-        } else if ("Notification" in window && Notification.permission !== "denied") {
-            Notification.requestPermission();
+        const approaching = items.filter(i => i.status === 'in_use' && 
+            getDaysDiff(i.startDate) >= (i.limit - settings.notifyBeforeDays) && 
+            getDaysDiff(i.startDate) < i.limit);
+
+        if ((overdue.length > 0 || approaching.length > 0) && "Notification" in window) {
+            if (Notification.permission === "granted") {
+                let message = '';
+                if (overdue.length > 0) message += `${overdue.length} вещей требуют стирки! `;
+                if (approaching.length > 0) message += `${approaching.length} вещей скоро потребуют стирки.`;
+                
+                new Notification("Сегодня постираем", {
+                    body: message,
+                    icon: "https://cdn-icons-png.flaticon.com/512/2663/2663503.png"
+                });
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
         }
     }
 
@@ -464,33 +949,65 @@
     // --- МОДАЛЬНЫЕ ОКНА ---
     function openModal() {
         editingItemId = null;
+        selectedIcon = '👕';
         document.getElementById('modalTitle').innerText = 'Новая вещь';
         document.getElementById('itemName').value = '';
         document.getElementById('itemLimit').value = '7';
+        document.getElementById('itemIcon').value = '👕';
+        document.getElementById('itemStorage').value = settings.storageZones[0];
+        renderStorageZonesSelect();
+        renderIconGrid();
         document.getElementById('itemModal').style.display = 'flex';
     }
 
     function closeModal() {
         document.getElementById('itemModal').style.display = 'none';
     }
-    
-    function closePostponeModal() {
-        document.getElementById('postponeModal').style.display = 'none';
-    }
 
     function saveItem() {
         const name = document.getElementById('itemName').value;
         const category = document.getElementById('itemCategory').value;
+        const icon = document.getElementById('itemIcon').value;
         const limit = document.getElementById('itemLimit').value;
+        const storageZone = document.getElementById('itemStorage').value;
 
         if (!name) return alert('Введите название');
 
         if (editingItemId) {
-            // Редактирование (пока не реализовано детально, просто создание для демо)
+            updateItem(editingItemId, {
+                name,
+                category,
+                icon,
+                limit: parseInt(limit),
+                storageZone
+            });
         } else {
-            createItem(name, category, limit);
+            createItem(name, category, icon, limit, storageZone);
         }
         closeModal();
+    }
+
+    function exportData() {
+        const data = { items, settings, exportDate: new Date().toISOString() };
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `laundry-backup-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function clearAllData() {
+        if (confirm('Вы уверены? Все данные будут удалены безвозвратно!')) {
+            localStorage.removeItem('laundryItems');
+            localStorage.removeItem('laundrySettings');
+            items = [];
+            settings = { notifyBeforeDays: 1, enableNotifications: true, storageZones: ['Шкаф'] };
+            renderItems();
+            document.getElementById('settingsModal').style.display = 'none';
+            alert('Данные очищены');
+        }
     }
 
     // Закрытие модального окна по клику вне
